@@ -145,6 +145,7 @@ Core utilities installed on every machine. Language toolchains, cloud-native, an
 
 ```bash
 brew install zoxide fzf yazi tmux lazygit gh tree wget helix glow
+brew install fd bat eza yq git-delta tlrc
 ```
 
 | Tool | Purpose | Notes |
@@ -159,6 +160,12 @@ brew install zoxide fzf yazi tmux lazygit gh tree wget helix glow
 | `wget` | Downloader | macOS ships only `curl` |
 | `helix` | Modal editor | Command is `hx` |
 | `glow` | Markdown renderer | `glow -p file.md` to page; headings use color and weight, not larger fonts (terminal cells are fixed-size) |
+| `fd` | Modern `find` | Searches by filename (the other half of `rg`); also a yazi/fzf preview dependency |
+| `bat` | `cat` with syntax highlighting and git annotations | Doubles as an fzf previewer; auto-degrades to plain output when piped |
+| `eza` | Modern `ls` (icons, git status, tree view) | Icons render thanks to Maple Mono NF CN |
+| `yq` | `jq` for YAML | Pairs with `jq` for the helm/kind/istioctl YAML workflow |
+| `git-delta` | Diff/blame pager for git | Powers command-line `git diff`, complementing lazygit |
+| `tlrc` | Rust `tldr` client — command cheatsheets | `tldr tar` for quick examples, faster than `man` |
 
 ### Shell integration
 
@@ -169,9 +176,30 @@ Add to `.zshrc`:
 eval "$(zoxide init zsh --cmd cd)"
 # fzf keybindings and completion (Ctrl-R history, Ctrl-T files)
 eval "$(fzf --zsh)"
+
+# eza / bat replacements
+alias ls='eza --icons --group-directories-first'
+alias ll='eza -la --icons --git'
+alias cat='bat'
 ```
 
+The `cat` alias only affects the interactive shell — scripts still call the real `cat`, and `bat` degrades to plain output when piped, so the alias is safe.
+
 yazi, tmux, and lazygit work out of the box with no custom config. For yazi's "cd to the last directory on quit", add the `y` wrapper function from the yazi docs.
+
+### git-delta
+
+Wire delta into `~/.gitconfig` so command-line `git diff`, `git show`, and `git blame` use it as the pager:
+
+```ini
+[core]
+    pager = delta
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    navigate = true
+    line-numbers = true
+```
 
 ### Helix
 
