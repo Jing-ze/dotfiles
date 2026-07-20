@@ -124,6 +124,10 @@ plugins=(git zsh-autosuggestions zsh-completions zsh-syntax-highlighting)
 brew install starship
 # Catppuccin Powerline preset, matches the Ghostty Catppuccin Mocha theme
 starship preset catppuccin-powerline -o ~/.config/starship.toml
+# The preset hard-codes show_notifications = true in [cmd_duration], which adds
+# a ~2s lag when exiting any command that ran >45s (editor/CLI sessions hit this
+# constantly). Turn it off. Re-run after swapping presets — they overwrite the file.
+sed -i '' 's/^show_notifications = true/show_notifications = false/' ~/.config/starship.toml
 ```
 
 In `.zshrc`:
@@ -135,7 +139,7 @@ ZSH_THEME=""
 eval "$(starship init zsh)"
 ```
 
-Swap presets with `starship preset <name> -o ~/.config/starship.toml` (`starship preset --list` for the full set). Popular choices: gruvbox-rainbow, catppuccin-powerline, tokyo-night, pastel-powerline. Every preset needs a Nerd Font, already covered by Maple Mono NF CN.
+Swap presets with `starship preset <name> -o ~/.config/starship.toml` (`starship preset --list` for the full set). Popular choices: gruvbox-rainbow, catppuccin-powerline, tokyo-night, pastel-powerline. Every preset needs a Nerd Font, already covered by Maple Mono NF CN. Re-run the `show_notifications` `sed` above after any swap — the preset overwrites the file and resets the flag.
 
 ---
 
