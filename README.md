@@ -172,14 +172,15 @@ brew install fd bat eza yq git-delta tlrc
 Add to `.zshrc`:
 
 ```zsh
-# zoxide takes over cd
-eval "$(zoxide init zsh --cmd cd)"
 # fzf keybindings and completion (Ctrl-R history, Ctrl-T files)
 eval "$(fzf --zsh)"
+# zoxide must be initialized last — it checks for this and warns otherwise
+eval "$(zoxide init zsh --cmd cd)"
 
 # eza / bat replacements
 alias ls='eza --icons --group-directories-first'
-alias ll='eza -la --icons --git'
+alias ll='eza -la --icons --git --group-directories-first'
+alias lt='eza --tree --level=2 --icons'
 alias cat='bat'
 ```
 
@@ -199,6 +200,9 @@ Wire delta into `~/.gitconfig` so command-line `git diff`, `git show`, and `git 
 [delta]
     navigate = true
     line-numbers = true
+    side-by-side = false
+[merge]
+    conflictStyle = zdiff3
 ```
 
 ### Helix
